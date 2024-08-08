@@ -35,6 +35,9 @@
 
 ## Security
 
+- [] Configure CORS policy
+- [] Configure HTTPS
+- [] Implement rate limiting
 - [] Authentication and authorization
 - [] Data encryption
 - [] Input validation
