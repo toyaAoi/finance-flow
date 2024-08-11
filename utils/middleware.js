@@ -15,5 +15,12 @@ const unknownEndpoint = (req, res) => {
 const errorHandler = (error, req, res, next) => {
   logger.error(error.message);
 
+  res.status(400).json({ error: error.message });
   next(error);
+};
+
+module.exports = {
+  requestLogger,
+  unknownEndpoint,
+  errorHandler,
 };
