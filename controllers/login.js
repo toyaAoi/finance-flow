@@ -15,12 +15,16 @@ loginRouter.post("/", async (req, res, _next) => {
     return res.status(401).json({ error: "invalid username or password" });
   }
 
+  // const userForToken = {
+  //   // username: user.username, // * Do I really need this?
+  //   id: user._id,
+  // };
   const userForToken = {
-    username: user.username,
     id: user._id,
   };
-  const token = jwt.sign(userForToken, process.env.SECRET, {
-    expiresIn: 60 * 60,
+
+  const token = jwt.sign(userForToken, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "1h",
   });
 
   res.status(200).json({

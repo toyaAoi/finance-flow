@@ -9,24 +9,39 @@ const requestLogger = (req, _res, next) => {
   next();
 };
 
-const tokenExtractor = (req, _res, next) => {
-  const authorization = req.get("authorization");
-  if (authorization.startsWith("Bearer ")) {
-    req.token = authorization.replace("Bearer ", "");
-  }
+// const tokenExtractor = (req, _res, next) => {
+//   const authorization = req.get("authorization");
+//   if (authorization.startsWith("Bearer ")) {
+//     req.token = authorization.split(" ")[1];
+//   }
 
-  next();
-};
+//   next();
+// };
 
-const userExtractor = (req, res, next) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
-  if (!decodedToken) {
-    res.status(401).json({
-      error: "token expired or invalid",
-    });
-  }
+// const userExtractor = (req, res, next) => {
+//   const decodedToken = jwt.verify(req.token, process.env.SECRET);
+//   if (!decodedToken) {
+//     res.status(403).json({
+//       error: "token expired or invalid",
+//     });
+//   }
 
-  next();
+//   req.body.userId = decodedToken.id;
+
+//   next();
+// };
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.userId = user.id;
+    next();
+  });
 };
 
 const unknownEndpoint = (_req, res) => {
@@ -42,8 +57,7 @@ const errorHandler = (error, _req, res, next) => {
 
 module.exports = {
   requestLogger,
-  tokenExtractor,
-  userExtractor,
   unknownEndpoint,
+  authenticateToken,
   errorHandler,
 };

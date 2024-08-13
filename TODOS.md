@@ -2,17 +2,17 @@
 
 ## User Management
 
-- [] User registration
-- [] User login
+- [x] User registration
+- [x] User login
 - [] User logout
 - [] User profile management
 - [] User password reset
 
 ## Transaction Management
 
-- [] Transaction creation
+- [x] Transaction creation
 - [] Transaction editing
-- [] Transaction deletion
+- [x] Transaction deletion
 - [] Transaction listing
 - [] Transaction filtering
 - [] Transaction sorting
@@ -48,9 +48,3 @@
 - [] Unit testing
 - [] Integration testing
 - [] End-to-end testing
-
-## Deployment
-
-- [] Cloud deployment
-- [] Containerization
-- [] Continuous integration and delivery
