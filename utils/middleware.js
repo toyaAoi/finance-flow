@@ -33,9 +33,10 @@ const unknownEndpoint = (_req, res) => {
   res.status(404).send({ error: "unknown endpoint" });
 };
 
-const errorHandler = (error, _req, _res, next) => {
+const errorHandler = (error, _req, res, next) => {
   logger.error(error.message);
 
+  res.status(400).json({ error: error.message });
   next(error);
 };
 
