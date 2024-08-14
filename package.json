@@ -7,7 +7,9 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_ENV=test node --test",
+    "test:watch": "cross-env NODE_ENV=test node --test --watch",
+    "test:coverage": "cross-env node --test --experimental-test-coverage --test-reporter=lcov"
   },
   "author": "Toya Aoi",
   "license": "ISC",
@@ -30,6 +32,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.9.0",
     "nodemon": "^3.1.4",
-    "prettier": "3.3.3"
+    "prettier": "3.3.3",
+    "supertest": "^7.0.0"
   }
 }

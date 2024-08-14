@@ -6,3 +6,5 @@ router.post("/reset", async (req, res) => {
   await Transactions.deleteMany({});
   res.status(204).end();
 });
+
+module.exports = router;

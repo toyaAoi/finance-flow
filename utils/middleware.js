@@ -51,6 +51,10 @@ const unknownEndpoint = (_req, res) => {
 const errorHandler = (error, _req, res, next) => {
   logger.error(error.message);
 
+  if (error.message.includes("duplicate key error")) {
+    error.message = "username already taken";
+  }
+
   res.status(400).json({ error: error.message });
   next(error);
 };
