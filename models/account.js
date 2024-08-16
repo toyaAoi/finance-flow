@@ -1,23 +1,19 @@
 const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const accountSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
   },
-  username: {
-    type: String,
+  balance: {
+    type: Number,
     required: true,
-    unique: true,
-    minLength: 3,
+    default: 0,
   },
-  passwordHash: {
-    type: String,
-    required: true,
-  },
-  accounts: [
+  users: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   ],
   transactions: [
@@ -28,13 +24,12 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
-userSchema.set("toJSON", {
+accountSchema.set("toJSON", {
   transform: (_document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
+    returnedObject.id = returnedObject._id;
     delete returnedObject._id;
     delete returnedObject.__v;
-    delete returnedObject.passwordHash;
   },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Account", accountSchema);

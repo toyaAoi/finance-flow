@@ -25,6 +25,11 @@ const transactionSchema = mongoose.Schema({
     ref: "User",
     required: true,
   },
+  account: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Account",
+    required: true,
+  },
 });
 
 transactionSchema.set("toJSON", {
