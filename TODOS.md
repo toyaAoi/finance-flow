@@ -4,25 +4,25 @@
 
 ### User Management
 
-- **[x]** User registration (Completed)
-- **[x]** User login (Completed)
+- [x] User registration (Completed)
+- [x] User login (Completed)
 - **[ ]** User logout (**High Priority** - Essential for user sessions)
 - **[ ]** User profile management (**Medium Priority** - Important for user experience)
 - **[ ]** User password reset (**Medium Priority** - Important for security)
 
 ### Transaction Management
 
-- **[x]** Transaction creation (Completed)
+- [x] Transaction creation (Completed)
 - **[ ]** Transaction editing (**High Priority** - Essential for data correction)
-- **[x]** Transaction deletion (Completed)
-- **[X]** Transaction listing (Completed)
+- [x] Transaction deletion (Completed)
+- [x] Transaction listing (Completed)
 - **[ ]** Transaction filtering (**Medium Priority** - Improves data exploration)
 - **[ ]** Transaction sorting (**Medium Priority** - Improves data exploration)
 
 ### Account Management
 
-- **[x]** Account creation (Completed)
-- **[x]** Adding a transaction affects account balance (Completed)
+- [x] Account creation (Completed)
+- [x] Adding a transaction affects account balance (Completed)
 - **[ ]** Adding a user to an account (**High Priority** - Essential for multi-user
   functionality)
 - **[ ]** Removing a user from an account (**High Priority** - Essential for multi-user
