@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
   accounts: [
     {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "Account",
     },
   ],
   transactions: [

@@ -1,6 +1,7 @@
 const transactionsRouter = require("express").Router();
 const Transaction = require("../models/transaction");
 const User = require("../models/user");
+const Account = require("../models/account");
 const middleware = require("../utils/middleware");
 
 transactionsRouter.get("/", middleware.authenticateToken, async (req, res) => {
@@ -10,17 +11,24 @@ transactionsRouter.get("/", middleware.authenticateToken, async (req, res) => {
 });
 
 transactionsRouter.post("/", middleware.authenticateToken, async (req, res) => {
-  const { type, amount, source, notes } = req.body;
+  const { type, amount, notes, accountId } = req.body;
   const user = await User.findById(req.userId);
+  const account = await Account.findById(accountId);
+
   const transaction = new Transaction({
     type,
     amount,
-    source,
     notes,
     user: user._id,
+    account: account._id,
   });
-  user.transactions.push(transaction);
+  user.transactions.push(transaction._id);
+  account.transactions.push(transaction._id);
+  account.balance =
+    type === "income" ? account.balance + amount : account.balance - amount;
+
   await user.save();
+  await account.save();
   const savedTransaction = await transaction.save();
 
   res.status(201).json(savedTransaction);

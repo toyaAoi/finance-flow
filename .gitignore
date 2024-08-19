@@ -131,3 +131,5 @@ dist
 
 # rest client
 *.rest 
+
+CURRENT_PROBLEMS.md
