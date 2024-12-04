@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const transactionSchema = mongoose.Schema({
+const transactionSchema = Schema({
   type: {
     type: String,
     required: true,
@@ -17,12 +17,12 @@ const transactionSchema = mongoose.Schema({
     type: String,
   },
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
   account: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "Account",
     required: true,
   },
@@ -36,4 +36,6 @@ transactionSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("Transaction", transactionSchema);
+const Transaction = model("Transaction", transactionSchema);
+
+export default Transaction;

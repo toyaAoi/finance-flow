@@ -6,27 +6,25 @@
 
 - [x] User registration (Completed)
 - [x] User login (Completed)
-- **[ ]** User logout (**High Priority** - Essential for user sessions)
-- **[ ]** User profile management (**Medium Priority** - Important for user experience)
+- **[ ]** User profile management (**Medium Priority** - Important for user
+  experience)
 - **[ ]** User password reset (**Medium Priority** - Important for security)
 
 ### Transaction Management
 
 - [x] Transaction creation (Completed)
-- **[ ]** Transaction editing (**High Priority** - Essential for data correction)
+- [x] Transaction editing (Completed)
 - [x] Transaction deletion (Completed)
 - [x] Transaction listing (Completed)
-- **[ ]** Transaction filtering (**Medium Priority** - Improves data exploration)
-- **[ ]** Transaction sorting (**Medium Priority** - Improves data exploration)
+- **[ ]** Transaction filtering (**Medium Priority** - Improves data
+  exploration)
 
 ### Account Management
 
 - [x] Account creation (Completed)
 - [x] Adding a transaction affects account balance (Completed)
-- **[ ]** Adding a user to an account (**High Priority** - Essential for multi-user
-  functionality)
-- **[ ]** Removing a user from an account (**High Priority** - Essential for multi-user
-  functionality)
+- [x] Adding a user to an account (Completed)
+- [x] Removing a user from an account (Completed)
 - **[ ]** Account editing (**Medium Priority** - Important for user experience)
 - **[ ]** Account deletion (**Medium Priority** - Important for data management)
 
@@ -34,13 +32,16 @@
 
 ### Budget Management
 
-- **[ ]** Budget creation (**High Priority** - Core feature for financial planning)
+- **[ ]** Budget creation (**High Priority** - Core feature for financial
+  planning)
 - **[ ]** Budget editing (**Medium Priority** - Important for user experience)
 - **[ ]** Budget deletion (**Medium Priority** - Important for data management)
 - **[ ]** Budget listing (**Medium Priority** - Important for viewing data)
 - **[ ]** Budget filtering (**Medium Priority** - Improves data exploration)
-- **[ ]** Budget allocation (**Medium Priority** - Important for financial planning)
-- **[ ]** Budget tracking (**Medium Priority** - Important for financial planning)
+- **[ ]** Budget allocation (**Medium Priority** - Important for financial
+  planning)
+- **[ ]** Budget tracking (**Medium Priority** - Important for financial
+  planning)
 
 ### Reporting
 
@@ -51,8 +52,10 @@
 
 ### Notifications
 
-- **[ ]** Account Access Notification (**Medium Priority** - Improves security awareness)
-- **[ ]** Transaction Notification (**Medium Priority** - Improves user awareness)
+- **[ ]** Account Access Notification (**Medium Priority** - Improves security
+  awareness)
+- **[ ]** Transaction Notification (**Medium Priority** - Improves user
+  awareness)
 - **[ ]** Budget Notification (**Medium Priority** - Improves user awareness)
 
 ### Security

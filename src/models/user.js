@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -17,14 +17,8 @@ const userSchema = new mongoose.Schema({
   },
   accounts: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "Account",
-    },
-  ],
-  transactions: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Transaction",
     },
   ],
 });
@@ -38,4 +32,6 @@ userSchema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("User", userSchema);
+const User = model("User", userSchema);
+
+export default User;
