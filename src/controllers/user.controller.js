@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import User from "../models/user.js";
-import { validateInput } from "../utils/utils.js";
+import { validateInput } from "../utils/validateInput.utils.js";
 
 export const userRegister = async (req, res, _next) => {
   validateInput(Object.keys(req.body), ["username", "name", "password"]);
@@ -20,7 +20,10 @@ export const userRegister = async (req, res, _next) => {
   const user = new User({ username, name, passwordHash });
   await user.save();
 
-  res.status(201).json(user);
+  res.status(201).json({
+    name: user.name,
+    username: user.username,
+  });
 };
 
 export const userLogin = async (req, res, _next) => {

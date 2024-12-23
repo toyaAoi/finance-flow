@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import Transaction from "../models/transaction.js";
 import Account from "../models/account.js";
-import { validateInput } from "../utils/utils.js";
+import { validateInput } from "../utils/validateInput.utils.js";
 import mongoose from "mongoose";
 
 export const transactionFetchAll = async (req, res) => {
