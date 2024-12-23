@@ -2,10 +2,11 @@ import { Router } from "express";
 import { authenticateToken } from "../utils/middleware.utils.js";
 import {
   accountCreate,
-  addUser,
   fetchAccountDetails,
   fetchAccountDetailsById,
-  removeUser,
+  requestAccess,
+  responseAccess,
+  removeAccess,
 } from "../controllers/account.controller.js";
 
 const router = Router();
@@ -13,7 +14,8 @@ const router = Router();
 router.post("/", authenticateToken, accountCreate);
 router.get("/", authenticateToken, fetchAccountDetails);
 router.get("/:id", authenticateToken, fetchAccountDetailsById);
-router.post("/:id/user", authenticateToken, addUser);
-router.delete("/:id/user/:userId", authenticateToken, removeUser);
+router.post("/:id/access-request", authenticateToken, requestAccess);
+router.post("/:id/access-response", authenticateToken, responseAccess);
+router.delete("/:id/access-remove/:userId", authenticateToken, removeAccess);
 
 export default router;

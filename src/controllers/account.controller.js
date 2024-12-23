@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 import Account from "../models/account.js";
 import User from "../models/user.js";
-import { validateInput } from "../utils/utils.js";
+import { validateInput } from "../utils/validateInput.utils.js";
 
 const accountCreate = async (req, res) => {
   const user = await User.findById(req.userId);
-  validateInput(Object.keys(req.body), ["name", "balance"]);
+  validateInput(Object.keys(req.body), ["name"]);
 
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -13,7 +13,7 @@ const accountCreate = async (req, res) => {
   try {
     const newAccount = new Account({
       name: req.body.name,
-      balance: req.body.balance,
+      balance: req.body.balance ? req.body.balance : 0,
       owner: user._id,
       users: [user._id],
     });
@@ -33,10 +33,10 @@ const accountCreate = async (req, res) => {
   }
 };
 
-const addUser = async (req, res) => {
-  validateInput(Object.keys(req.body), ["userId"]);
+const requestAccess = async (req, res) => {
+  validateInput(Object.keys(req.body), ["username"]);
 
-  const user = await User.findById(req.body.userId);
+  const user = await User.findOne({ username: req.body.username });
 
   if (!user) {
     return res.status(404).json({ error: "User not found" });
@@ -45,6 +45,11 @@ const addUser = async (req, res) => {
   const account = await Account.findById(req.params.id);
   if (!account) {
     return res.status(404).json({ error: "Account not found" });
+  }
+  const owner = await User.findById(req.userId);
+
+  if (account.owner.toString() !== owner._id.toString()) {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 
   const session = await mongoose.startSession();
@@ -68,7 +73,11 @@ const addUser = async (req, res) => {
   }
 };
 
-const removeUser = async (req, res) => {
+const responseAccess = async (req, res) => {
+  res.send("yet to be implemented");
+};
+
+const removeAccess = async (req, res) => {
   const account = await Account.findById(req.params.id);
   if (!account) {
     return res.status(404).json({ error: "Account not found" });
@@ -114,8 +123,9 @@ const fetchAccountDetailsById = async (req, res) => {
 
 export {
   accountCreate,
-  addUser,
-  removeUser,
+  requestAccess,
+  responseAccess,
+  removeAccess,
   fetchAccountDetails,
   fetchAccountDetailsById,
 };
