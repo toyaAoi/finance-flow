@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 
-const transactionSchema = Schema({
+const transactionSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
@@ -8,6 +8,10 @@ const transactionSchema = Schema({
   amount: {
     type: Number,
     required: true,
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "TransactionCategory",
   },
   time: {
     type: Date,
@@ -17,12 +21,12 @@ const transactionSchema = Schema({
     type: String,
   },
   user: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
   account: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Account",
     required: true,
   },
@@ -36,6 +40,6 @@ transactionSchema.set("toJSON", {
   },
 });
 
-const Transaction = model("Transaction", transactionSchema);
+const Transaction = mongoose.model("Transaction", transactionSchema);
 
 export default Transaction;
