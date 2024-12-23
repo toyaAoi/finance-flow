@@ -48,7 +48,8 @@ export const transactionCreate = async (req, res) => {
     const transaction = new Transaction({
       type: data.type,
       amount: data.amount,
-      notes: data.notes,
+      category: data.category ? data.category : null,
+      notes: data.notes ? data.notes : null,
       user: user._id,
       account: account._id,
     });
