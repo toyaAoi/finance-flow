@@ -1,14 +1,11 @@
 "use strict";
 
-import { expect, use } from "chai";
-import chaiHttp from "chai-http/index.js";
-
-const chai = use(chaiHttp);
-const api = chai.request.execute("http://localhost:3000");
+import { expect } from "chai";
+import api from "./testapi.js";
 
 describe("users", () => {
   before(async () => {
-    await api.post("/api/reset/user");
+    await api.post("/reset/user");
   });
 
   const userData = {
@@ -18,14 +15,17 @@ describe("users", () => {
   };
 
   it("should be able to create a new account", async () => {
-    const response = await api.post("/api/user/register").send(userData);
+    const response = await api.post("/user/register").send(userData);
     expect(response.status).to.equal(201);
-    expect(response.body).to.equal("user created");
+    expect(response.body).to.have.property("name").to.equal(userData.name);
+    expect(response.body)
+      .to.have.property("username")
+      .to.equal(userData.username);
   });
 
   describe("should not be able to create a new account", () => {
     it("with an existing username", async () => {
-      const response = await api.post("/api/user/register").send(userData);
+      const response = await api.post("/user/register").send(userData);
       expect(response.status).to.equal(400);
       expect(response.body.error.message).to.include("username already taken");
     });
@@ -37,7 +37,7 @@ describe("users", () => {
       };
 
       const response = await api
-        .post("/api/user/register")
+        .post("/user/register")
         .send(userWithoutUsername);
       expect(response.status).to.equal(400);
     });
@@ -49,14 +49,14 @@ describe("users", () => {
       };
 
       const response = await api
-        .post("/api/user/register")
+        .post("/user/register")
         .send(userWithoutPassword);
       expect(response.status).to.equal(400);
     });
   });
 
   it("should be able to login with valid credentials", async () => {
-    const response = await api.post("/api/user/login").send(userData);
+    const response = await api.post("/user/login").send(userData);
     expect(response.status).to.equal(200);
     expect(response.body.name).to.equal(userData.name);
     expect(response.body.username).to.equal(userData.username);
@@ -69,7 +69,7 @@ describe("users", () => {
         ...userData,
         password: "wrongPassword",
       };
-      const response = await api.post("/api/user/login").send(invalidLoginData);
+      const response = await api.post("/user/login").send(invalidLoginData);
       expect(response.status).to.equal(401);
     });
     it("without username", async () => {
@@ -78,7 +78,7 @@ describe("users", () => {
         username: undefined,
       };
       const response = await api
-        .post("/api/user/login")
+        .post("/user/login")
         .send(loginDataWithoutUsername);
       expect(response.status).to.equal(400);
     });
@@ -88,7 +88,7 @@ describe("users", () => {
         password: undefined,
       };
       const response = await api
-        .post("/api/user/login")
+        .post("/user/login")
         .send(loginDataWithoutPassword);
       expect(response.status).to.equal(400);
     });

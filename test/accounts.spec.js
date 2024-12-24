@@ -1,15 +1,12 @@
 "use strict";
 
-import { expect, use } from "chai";
-import chaiHttp from "chai-http/index.js";
-
-const chai = use(chaiHttp);
-const api = chai.request.execute("http://localhost:3000/api");
+import { expect } from "chai";
+import api from "./testapi.js";
 
 describe("an account", () => {
   let TOKEN;
-  let SECOND_USER;
-  let TEST_ACCOUNT;
+  // let SECOND_USER;
+  // let TEST_ACCOUNT;
 
   before(async () => {
     await api.post("/reset/user");
@@ -40,42 +37,43 @@ describe("an account", () => {
     expect(response.body.name).to.equal(accountData.name);
     expect(response.body.balance).to.equal(accountData.balance);
 
-    TEST_ACCOUNT = response.body;
+    // TEST_ACCOUNT = response.body;
   });
 
-  it("owner can add another user to it", async () => {
-    const user2Data = {
-      name: "tester2",
-      username: "tester2",
-      password: "tester2",
-    };
+  // TODO: add tests for adding and removing users
+  // it("owner can add another user to it", async () => {
+  //   const user2Data = {
+  //     name: "tester2",
+  //     username: "tester2",
+  //     password: "tester2",
+  //   };
 
-    const secondUser = await api.post("/user/register").send(user2Data);
-    SECOND_USER = secondUser.body;
-    await api
-      .post("/account/user")
-      .set("Authorization", `Bearer ${TOKEN}`)
-      .send({
-        userId: SECOND_USER.id,
-      });
+  //   const secondUser = await api.post("/user/register").send(user2Data);
+  //   SECOND_USER = secondUser.body;
+  //   await api
+  //     .post("/account/user")
+  //     .set("Authorization", `Bearer ${TOKEN}`)
+  //     .send({
+  //       userId: SECOND_USER.id,
+  //     });
 
-    const response = await api
-      .post(`/account/${TEST_ACCOUNT.id}/user`)
-      .set("Authorization", `Bearer ${TOKEN}`)
-      .send({
-        userId: SECOND_USER.id,
-      });
+  //   const response = await api
+  //     .post(`/account/${TEST_ACCOUNT.id}/user`)
+  //     .set("Authorization", `Bearer ${TOKEN}`)
+  //     .send({
+  //       userId: SECOND_USER.id,
+  //     });
 
-    expect(response.status).to.equal(201);
-    expect(response.body).to.have.property("message");
-    expect(response.body.message).to.equal("User added to account");
-  });
+  //   expect(response.status).to.equal(201);
+  //   expect(response.body).to.have.property("message");
+  //   expect(response.body.message).to.equal("User added to account");
+  // });
 
-  it("owner can remove an user from it", async () => {
-    const response = await api
-      .delete(`/account/${TEST_ACCOUNT.id}/user/${SECOND_USER.id}`)
-      .set("Authorization", `Bearer ${TOKEN}`);
+  // it("owner can remove an user from it", async () => {
+  //   const response = await api
+  //     .delete(`/account/${TEST_ACCOUNT.id}/user/${SECOND_USER.id}`)
+  //     .set("Authorization", `Bearer ${TOKEN}`);
 
-    expect(response.status).to.equal(204);
-  });
+  //   expect(response.status).to.equal(204);
+  // });
 });

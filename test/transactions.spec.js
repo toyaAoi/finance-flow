@@ -1,10 +1,7 @@
 "use strict";
 
-import { expect, use } from "chai";
-import chaiHttp from "chai-http/index.js";
-
-const chai = use(chaiHttp);
-const api = chai.request.execute("http://localhost:3000/api");
+import { expect } from "chai";
+import api from "./testapi.js";
 
 describe("Transactions", () => {
   let TOKEN;
