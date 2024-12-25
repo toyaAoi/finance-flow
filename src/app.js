@@ -3,6 +3,10 @@ const app = express();
 import "express-async-errors";
 import cors from "cors";
 import mongoose from "mongoose";
+import YAML from "yaml";
+import swaggerUi from "swagger-ui-express";
+import fs from "fs";
+
 import * as middleware from "./utils/middleware.utils.js";
 import usersRouter from "./routes/user.router.js";
 import transactionsRouter from "./routes/transaction.router.js";
@@ -17,6 +21,9 @@ app.use(cors());
 app.use(express.json());
 
 app.use(middleware.requestLogger);
+
+const swaggerDocument = YAML.parse(fs.readFileSync("./swagger.yaml", "utf8"));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/user", usersRouter);
 app.use("/api/account", accountsRouter);

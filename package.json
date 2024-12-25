@@ -1,7 +1,6 @@
 {
   "name": "finance-flow-backend",
   "version": "1.0.0",
-  "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "cross-env NODE_ENV=production node src/index.js",
@@ -12,7 +11,7 @@
     "test": "mocha -u bdd -R spec --recursive test",
     "test:single": "mocha -u bdd -R spec test/accounts.spec.js"
   },
-  "author": "Toya Aoi",
+  "author": "Saptarshi Mula",
   "license": "ISC",
   "description": "",
   "dependencies": {
@@ -25,7 +24,9 @@
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
-    "mongoose": "^8.8.3"
+    "mongoose": "^8.8.3",
+    "swagger-ui-express": "^5.0.1",
+    "yaml": "^2.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",

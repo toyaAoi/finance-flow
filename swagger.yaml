@@ -1,0 +1,396 @@
+openapi: 3.0.0
+info:
+  title: Finance Flow API
+  version: 1.0.0
+  description: |
+    Finance Flow API
+  contact:
+    name: Toya Aoi
+    email: 0QoZV@example.com
+    url: https://github.com/toyaaoi
+  license:
+    name: MIT
+    url: https://github.com/toyaaoi/finance-flow/blob/main/LICENSE
+
+servers:
+  - url: http://localhost:3000/api
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+    ##################################
+    ## Users
+    ##################################
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        username:
+          type: string
+          example: "john_doe"
+      required:
+        - name
+        - username
+
+    RegisterCredentials:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/User"
+        - type: object
+          properties:
+            password:
+              type: string
+              example: "password123"
+          required:
+            - password
+
+    RegisterResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+
+    LoginCredentials:
+      type: object
+      properties:
+        username:
+          type: string
+          example: "john_doe"
+        password:
+          type: string
+          example: "password123"
+      required:
+        - username
+        - password
+
+    LoginResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+        token:
+          type: string
+
+    ##################################
+    ## Accounts
+    ##################################
+    Account:
+      type: object
+      properties:
+        name:
+          type: string
+        balance:
+          type: number
+        owener:
+          type: string
+        users:
+          type: array
+          items:
+            type: string
+
+    CreateAccount:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Reserve Bank"
+        balance:
+          type: number
+          example: 1000
+      required:
+        - name
+
+    TransactionType:
+      type: string
+      enum:
+        - DEPOSIT
+        - WITHDRAW
+        - TRANSFER
+
+    Pagination:
+      type: object
+      properties:
+        limit:
+          type: number
+          default: 10
+        page:
+          type: number
+          default: 1
+      required:
+        - limit
+        - page
+
+    PaginationResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+  parameters:
+    Id:
+      name: accountId
+      in: path
+      required: true
+      schema:
+        type: string
+
+    pagination:
+      name: pagination
+      in: query
+      schema:
+        $ref: "#/components/schemas/Pagination"
+
+paths:
+  /user/register:
+    post:
+      description: Create a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterCredentials"
+        required: true
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+  /user/login:
+    post:
+      summary: Login
+      description: |
+        Login a user with username and password and get a token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginCredentials"
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+
+        400:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /account:
+    post:
+      description: Create an account
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAccount"
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /account/{accountId}:
+    get:
+      description: Get an account
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/Id"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /accountAccessRequest:
+    get:
+      description: Get all account access requests
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginationResponse"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+    post:
+      description: Create an account access request
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountAccessRequest"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /accountAccessRequest/{accountId}:
+    get:
+      description: Get an account access request
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountAccessRequest"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+    put:
+      description: Update an account access request
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountAccessRequest"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+    delete:
+      description: Delete an account access request
+      responses:
+        200:
+          description: OK
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /transaction:
+    post:
+      description: Create a transaction
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+  /transaction/{transactionId}:
+    put:
+      description: Update a transaction
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        500:
+          $ref: "#/components/responses/InternalServerError"
