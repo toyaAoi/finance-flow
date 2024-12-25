@@ -125,7 +125,9 @@ export const transactionUpdate = async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
 
-  const transaction = await Transaction.findById(id).lean();
+  //////////////////////////////////////////////////
+  // Existence check
+  const transaction = await Transaction.findById(id);
   if (!transaction) {
     return res.status(404).json({ error: "Transaction not found" });
   }
@@ -135,32 +137,43 @@ export const transactionUpdate = async (req, res) => {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
+  const account = await Account.findById(transaction.account);
+  if (!account) {
+    return res.status(404).json({ error: "Account doesn't exist." });
+  }
+  ////////////////////////////////////////////////////
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const updatedTransaction = await Transaction.findByIdAndUpdate(
-      id,
-      {
-        type: updateData.type,
-        amount: updateData.amount,
-        notes: updateData.notes ? updateData.notes : transaction.notes,
-      },
-      { new: true, session }
-    );
+    const amountDiff = updateData.amount - transaction.amount;
+    const isIncomeUpdate = updateData.type === "income";
+    const isSameType = transaction.type === updateData.type;
 
-    await Account.findByIdAndUpdate(
-      transaction.account,
-      {
-        $inc: {
-          balance:
-            updateData.type === "income"
-              ? updateData.amount - transaction.amount
-              : transaction.amount - updateData.amount,
-        },
-      },
-      { session }
-    );
+    if (isSameType) {
+      // If the transaction type is the same
+      if (isIncomeUpdate) {
+        account.balance += amountDiff;
+      } else {
+        account.balance -= amountDiff;
+      }
+    } else {
+      // If the transaction type is different
+      if (isIncomeUpdate) {
+        account.balance += amountDiff + 2 * transaction.amount;
+      } else {
+        account.balance -= amountDiff + 2 * transaction.amount;
+      }
+    }
+
+    transaction.type = updateData.type;
+    transaction.amount = updateData.amount;
+    transaction.category = updateData.category;
+    transaction.notes = updateData.notes ? updateData.notes : transaction.notes;
+
+    const updatedTransaction = await transaction.save({ session });
+    await account.save({ session });
 
     await session.commitTransaction();
     res.status(201).json(updatedTransaction);

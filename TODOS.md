@@ -16,6 +16,7 @@
 - [x] Transaction editing (Completed)
 - [x] Transaction deletion (Completed)
 - [x] Transaction listing (Completed)
+- [x] Transaction categorizing (Completed)
 - **[ ]** Transaction filtering (**Medium Priority** - Improves data
   exploration)
 

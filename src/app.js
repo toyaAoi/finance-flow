@@ -9,8 +9,9 @@ import fs from "fs";
 
 import * as middleware from "./utils/middleware.utils.js";
 import usersRouter from "./routes/user.router.js";
-import transactionsRouter from "./routes/transaction.router.js";
 import accountsRouter from "./routes/account.router.js";
+import transactionsRouter from "./routes/transaction.router.js";
+import transactionsCategoryRouter from "./routes/transactionCategory.router.js";
 import resetRouter from "./routes/reset.router.js";
 import config from "./config/config.js";
 
@@ -28,6 +29,11 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/user", usersRouter);
 app.use("/api/account", middleware.authenticateToken, accountsRouter);
 app.use("/api/transaction", middleware.authenticateToken, transactionsRouter);
+app.use(
+  "/api/transaction-category",
+  middleware.authenticateToken,
+  transactionsCategoryRouter
+);
 
 if (config.NODE_ENV === "test") {
   app.use("/api/reset", resetRouter);
