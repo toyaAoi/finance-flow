@@ -1,8 +1,6 @@
 import { Router } from "express";
-import { authenticateToken } from "../utils/middleware.utils.js";
 import {
   accountCreate,
-  fetchAccountDetails,
   fetchAccountDetailsById,
   requestAccess,
   responseAccess,
@@ -11,11 +9,10 @@ import {
 
 const router = Router();
 
-router.post("/", authenticateToken, accountCreate);
-router.get("/", authenticateToken, fetchAccountDetails);
-router.get("/:id", authenticateToken, fetchAccountDetailsById);
-router.post("/:id/access-request", authenticateToken, requestAccess);
-router.post("/:id/access-response", authenticateToken, responseAccess);
-router.delete("/:id/access-remove/:userId", authenticateToken, removeAccess);
+router.post("/", accountCreate);
+router.get("/:id", fetchAccountDetailsById);
+router.post("/:id/access-request", requestAccess);
+router.post("/:id/access-response", responseAccess);
+router.delete("/:id/access-remove/:userId", removeAccess);
 
 export default router;

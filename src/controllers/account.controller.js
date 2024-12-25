@@ -116,7 +116,9 @@ const fetchAccountDetails = async (req, res) => {
 };
 
 const fetchAccountDetailsById = async (req, res) => {
-  const account = await Account.findById(req.params.id);
+  const account = await Account.findById(req.params.id).populate(
+    "transactions"
+  );
 
   res.json(account);
 };

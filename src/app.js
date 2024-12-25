@@ -26,7 +26,7 @@ const swaggerDocument = YAML.parse(fs.readFileSync("./swagger.yaml", "utf8"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/user", usersRouter);
-app.use("/api/account", accountsRouter);
+app.use("/api/account", middleware.authenticateToken, accountsRouter);
 app.use("/api/transaction", middleware.authenticateToken, transactionsRouter);
 
 if (config.NODE_ENV === "test") {
