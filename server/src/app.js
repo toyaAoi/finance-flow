@@ -14,18 +14,35 @@ import transactionsRouter from "./routes/transaction.router.js";
 import transactionsCategoryRouter from "./routes/transactionCategory.router.js";
 import resetRouter from "./routes/reset.router.js";
 import config from "./config/config.js";
+import seed from "./database/seed.js";
 
 mongoose.set("strictQuery", false);
 
-// TODO: Configure CORS
-app.use(cors());
-app.use(express.json());
+const corsOptions = {
+  origin: "*", // TODO: Configure origin
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
 app.use(middleware.requestLogger);
+app.use(cors(corsOptions));
+app.use(express.json());
 
-const swaggerDocument = YAML.parse(fs.readFileSync("./swagger.yaml", "utf8"));
+////////////////////////////////////////////////////
+// Swagger UI
+let swaggerDocument;
+try {
+  swaggerDocument = YAML.parse(fs.readFileSync("./swagger.yaml", "utf8"));
+} catch (err) {
+  console.error("Error reading Swagger YAML file:", err);
+  process.exit(1);
+}
+
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////
+// Routes
 app.use("/api/user", usersRouter);
 app.use("/api/account", middleware.authenticateToken, accountsRouter);
 app.use("/api/transaction", middleware.authenticateToken, transactionsRouter);
@@ -34,6 +51,9 @@ app.use(
   middleware.authenticateToken,
   transactionsCategoryRouter
 );
+////////////////////////////////////////////////////
+
+seed();
 
 if (config.NODE_ENV === "test") {
   app.use("/api/reset", resetRouter);

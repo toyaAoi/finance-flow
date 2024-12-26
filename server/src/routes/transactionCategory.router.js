@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   transactionCategoryCreate,
   transactionCategoryEdit,
-} from "../controllers/transactionCategory.controller";
+} from "../controllers/transactionCategory.controller.js";
 
 const router = Router();
 

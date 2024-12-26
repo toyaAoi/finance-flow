@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { validateInput } from "../utils/validateInput.utils";
-import User from "../models/user";
-import TransactionCategory from "../models/transactionCategory";
+import { validateInput } from "../utils/validateInput.utils.js";
+import User from "../models/user.js";
+import TransactionCategory from "../models/transactionCategory.js";
 
 export const transactionCategoryCreate = async (req, res) => {
   validateInput(Object.keys(req.body), ["name", "color"]);
