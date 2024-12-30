@@ -1,8 +1,14 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Landing from "@/pages/Landing";
+
 function App() {
   return (
-    <>
-      <h1>Hello, World!</h1>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
