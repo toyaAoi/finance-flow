@@ -3,26 +3,34 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-// import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import authService from "@/services/auth";
+import { toast } from "sonner";
 
 function AuthForm() {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  // const { toast } = useToast();
+  const [fullName, setFullName] = useState("");
   const navigate = useNavigate();
+
+  const loginMutation = useMutation({
+    mutationFn: authService.login,
+    onSuccess: () => {
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", { email, password, isLogin });
-    // toast({
-    //   title: "Success!",
-    //   description: isLogin ? "Logged in successfully" : "Account created successfully",
-    // });
 
-    // Navigate to dashboard after successful login/signup
-    navigate("/dashboard");
+    if (isLogin) {
+      loginMutation.mutate({ username, password });
+    }
   };
 
   return (
@@ -33,16 +41,29 @@ function AuthForm() {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Username</Label>
             <Input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="username"
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
+          {!isLogin && (
+            <div className="space-y-2">
+              <Label htmlFor="full-name">Full Name</Label>
+              <Input
+                id="full-name"
+                type="text"
+                placeholder="Enter your username"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+              />
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
