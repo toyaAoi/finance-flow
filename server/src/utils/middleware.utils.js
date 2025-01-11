@@ -39,9 +39,7 @@ export const errorHandler = (error, _req, res, next) => {
   }
 
   res.status(400).json({
-    error: {
-      message: error.message,
-    },
+    error: error.message,
   });
   next(error);
 };
