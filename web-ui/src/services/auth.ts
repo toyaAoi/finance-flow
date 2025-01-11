@@ -1,13 +1,21 @@
-type LoginInput = {
+import { handleError } from "./error";
+
+export type LoginInput = {
   username: string;
   password: string;
 };
 
+export type RegisterInput = LoginInput & { name: string };
+
 class AuthService {
-  token: string | null = null;
+  #token: string | null = null;
 
   constructor() {
-    this.token = localStorage.getItem("ff_token") || null;
+    this.#token = localStorage.getItem("ff_token") || null;
+  }
+
+  get token() {
+    return this.#token;
   }
 
   async login(input: LoginInput) {
@@ -19,18 +27,28 @@ class AuthService {
       body: JSON.stringify(input),
     });
 
-    if (!response.ok) {
-      if (response.status !== 500) {
-        const errorData = await response.json();
-        throw new Error(errorData.error);
-      }
-
-      throw new Error(response.statusText);
-    }
+    handleError(response);
 
     const data = await response.json();
-    this.token = data.token;
+    this.#token = data.token;
     localStorage.setItem("ff_token", data.token);
+
+    return data;
+  }
+
+  async register(input: RegisterInput) {
+    console.log(input);
+    const response = await fetch("/api/user/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(input),
+    });
+
+    handleError(response);
+
+    const data = await response.json();
 
     return data;
   }

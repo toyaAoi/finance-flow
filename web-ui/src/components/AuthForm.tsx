@@ -1,18 +1,21 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+
 import authService from "@/services/auth";
-import { toast } from "sonner";
 
 function AuthForm() {
-  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
+  const [name, setName] = useState("");
+  const [isLogin, setIsLogin] = useState(true);
+
   const navigate = useNavigate();
 
   const loginMutation = useMutation({
@@ -25,13 +28,27 @@ function AuthForm() {
     },
   });
 
+  const registerMutation = useMutation({
+    mutationFn: authService.register,
+    onSuccess: () => {
+      loginMutation.mutate({ username, password });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isLogin) {
       loginMutation.mutate({ username, password });
+    } else {
+      registerMutation.mutate({ username, password, name });
     }
   };
+
+  const disableButton = loginMutation.isPending || registerMutation.isPending;
 
   return (
     <Card className="w-full max-w-md">
@@ -58,8 +75,8 @@ function AuthForm() {
                 id="full-name"
                 type="text"
                 placeholder="Enter your username"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
@@ -75,7 +92,7 @@ function AuthForm() {
               required
             />
           </div>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={disableButton}>
             {isLogin ? "Log In" : "Sign Up"}
           </Button>
           <Button
