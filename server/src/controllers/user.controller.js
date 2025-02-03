@@ -47,6 +47,25 @@ export const userLogin = async (req, res, _next) => {
   res.status(200).json({
     name: user.name,
     username: user.name,
+    accounts: user.accounts,
+    token,
+  });
+};
+
+export const tokenLogin = async (req, res, _next) => {
+  const user = await User.findById(req.userId);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  const token = jwt.sign({ id: user._id }, config.ACCESS_TOKEN_SECRET, {
+    expiresIn: "2d",
+  });
+
+  res.status(200).json({
+    name: user.name,
+    username: user.username,
+    accounts: user.accounts,
     token,
   });
 };
