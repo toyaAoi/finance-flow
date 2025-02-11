@@ -26,6 +26,8 @@ const seed = async () => {
     users: [newUser._id],
   });
 
+  await newUser.updateOne({ $push: { accounts: newAccount._id } });
+
   const categoriesWithUser = seedData.transactionCategories.map((category) => ({
     ...category,
     user: newUser._id,
@@ -34,6 +36,11 @@ const seed = async () => {
   const transactionCategories = await TransactionCategory.insertMany(
     categoriesWithUser
   );
+
+  await newAccount.updateOne({
+    $push: { transactionCategories: transactionCategories.map((c) => c._id) },
+  });
+
   const categoriesMap = new Map(
     transactionCategories.map((category) => [category.name, category._id])
   );
@@ -49,7 +56,11 @@ const seed = async () => {
     category: categoriesMap.get(transaction.category),
   }));
 
-  await Transaction.insertMany(transactions);
+  const newTransactions = await Transaction.insertMany(transactions);
+
+  await newAccount.updateOne({
+    $push: { transactions: newTransactions.map((t) => t._id) },
+  });
 };
 
 export default seed;
