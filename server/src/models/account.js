@@ -21,6 +21,12 @@ const accountSchema = new Schema({
       ref: "User",
     },
   ],
+  transactionCategories: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "TransactionCategory",
+    },
+  ],
   transactions: [
     {
       type: Schema.Types.ObjectId,
