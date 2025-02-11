@@ -2,6 +2,13 @@ import mongoose from "mongoose";
 import Account from "../models/account.js";
 import User from "../models/user.js";
 import { validateInput } from "../utils/validateInput.utils.js";
+import {
+  getExpenseThisMonth,
+  getExpenseThisMonthByCategory,
+  getIncomeThisMonth,
+  getTransactionsThisMonthByDay,
+} from "./utils.js";
+import Transaction from "../models/transaction.js";
 
 const accountCreate = async (req, res) => {
   const user = await User.findById(req.userId);
@@ -109,18 +116,31 @@ const removeAccess = async (req, res) => {
   }
 };
 
-const fetchAccountDetails = async (req, res) => {
-  const account = await Account.findById(req.params.id).populate("users");
-
-  res.json(account);
-};
-
 const fetchAccountDetailsById = async (req, res) => {
-  const account = await Account.findById(req.params.id).populate(
-    "transactions"
-  );
+  const accountId = req.params.id;
+  const account = await Account.findById(accountId);
+  const recentTransactionIds = account.transactions.slice(-5);
+  const recentTransactions = await Transaction.find({
+    _id: { $in: recentTransactionIds },
+  })
+    .populate({ path: "user", select: "username" })
+    .populate({ path: "account", select: "name" })
+    .populate({ path: "category", select: "name color" });
+  const incomeThisMonth = await getIncomeThisMonth(accountId);
+  const expenseThisMonth = await getExpenseThisMonth();
+  const expenseThisMonthByCategory = await getExpenseThisMonthByCategory();
+  const transactionsThisMonthByDay = await getTransactionsThisMonthByDay();
 
-  res.json(account);
+  res.json({
+    id: account.id,
+    name: account.name,
+    balance: account.balance,
+    expenseThisMonth,
+    incomeThisMonth,
+    recentTransactions,
+    expenseThisMonthByCategory,
+    transactionsThisMonthByDay,
+  });
 };
 
 export {
@@ -128,6 +148,5 @@ export {
   requestAccess,
   responseAccess,
   removeAccess,
-  fetchAccountDetails,
   fetchAccountDetailsById,
 };
