@@ -1,6 +1,7 @@
 import User from "../models/user.js";
 import Transaction from "../models/transaction.js";
 import Account from "../models/account.js";
+import TransactionCategory from "../models/transactionCategory.js";
 import { validateInput } from "../utils/validateInput.utils.js";
 import mongoose from "mongoose";
 
@@ -32,10 +33,27 @@ export const transactionFetchOne = async (req, res) => {
 };
 
 export const transactionCreate = async (req, res) => {
-  validateInput(Object.keys(req.body), ["type", "amount", "accountId"]);
+  validateInput(Object.keys(req.body), [
+    "type",
+    "amount",
+    "accountId",
+    "category",
+  ]);
   const data = req.body;
   const user = await User.findById(req.userId);
   const account = await Account.findById(data.accountId);
+
+  let category = await TransactionCategory.findOne({
+    name: data.categroy.name,
+    account,
+  });
+  if (!category) {
+    category = await TransactionCategory.create({
+      name: category.name,
+      color: category.color,
+      account,
+    });
+  }
 
   if (!user || !account) {
     return res.status(404).json({ error: "User or account not found" });
@@ -48,7 +66,7 @@ export const transactionCreate = async (req, res) => {
     const transaction = new Transaction({
       type: data.type,
       amount: data.amount,
-      category: data.category ? data.category : null,
+      category,
       notes: data.notes ? data.notes : null,
       user: user._id,
       account: account._id,
@@ -106,7 +124,7 @@ export const transactionDelete = async (req, res) => {
     await Account.findByIdAndUpdate(
       transaction.account,
       { $pull: { transactions: transaction._id } },
-      { session }
+      { session },
     );
 
     // Commit the transaction
