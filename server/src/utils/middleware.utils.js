@@ -16,8 +16,6 @@ export const authenticateToken = (req, res, next) => {
   if (token == null) return res.sendStatus(401);
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    console.log(err);
-
     if (err) {
       res.status(401);
 
@@ -40,7 +38,7 @@ export const unknownEndpoint = (_req, res) => {
 
 export const errorHandler = (error, _req, res, next) => {
   logger.error(error.message);
-  console.log(error);
+  console.error(error);
 
   if (error.message.includes("duplicate key error")) {
     error.message = "username already taken";
