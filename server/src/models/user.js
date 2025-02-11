@@ -21,12 +21,6 @@ const userSchema = new Schema({
       ref: "Account",
     },
   ],
-  transactionCategories: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "TransactionCategory",
-    },
-  ],
 });
 
 userSchema.set("toJSON", {
