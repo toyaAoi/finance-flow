@@ -2,14 +2,13 @@ import mongoose from "mongoose";
 import { validateInput } from "../utils/validateInput.utils.js";
 import User from "../models/user.js";
 import TransactionCategory from "../models/transactionCategory.js";
+import Account from "../models/account.js";
 
 export const transactionCategoryCreate = async (req, res) => {
-  validateInput(Object.keys(req.body), ["name", "color"]);
   const data = req.body;
-  const user = await User.findById(req.userId);
-  if (!user) {
-    return res.status(404).json({ error: "User not found" });
-  }
+  validateInput(Object.keys(data), ["name", "color"]);
+
+  const account = await Account.findById(req.params.id);
 
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -19,10 +18,10 @@ export const transactionCategoryCreate = async (req, res) => {
       name: data.name,
       color: data.color,
     });
-    user.transactionCategories.push(newTransactionCategory._id);
+    account.transactionCategories.push(newTransactionCategory._id);
 
     await Promise.all[
-      (newTransactionCategory.save({ session }), user.save({ session }))
+      (newTransactionCategory.save({ session }), account.save({ session }))
     ];
 
     res.status(201).end();
@@ -48,9 +47,9 @@ export const transactionCategoryEdit = async (req, res) => {
     return res.status(404).json({ error: "User not found" });
   }
 
-  // Authorization
-  if (transactionCategory.user.toString() !== user._id.toString()) {
-    return res.status(401).json({ error: "Unauthorized" });
+  const account = await Account.findById(req.params.accountId);
+  if (!account) {
+    return res.status(404).json({ error: "Account not found" });
   }
   ////////////////////////////////////////////////////
 

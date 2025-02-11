@@ -4,15 +4,14 @@ const TransactionCategorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
   },
   color: {
     type: String,
     required: true,
   },
-  user: {
+  account: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Account",
     required: true,
   },
 });
