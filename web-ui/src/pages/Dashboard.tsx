@@ -6,11 +6,11 @@ import { CategoryChart } from "@/components/CategoryChart";
 import { Chart } from "@/components/FinanceChart";
 import { FinancialSummary } from "@/components/FinancialSummary";
 import { TransactionList } from "@/components/TransactionList";
+import { TransactionDialog } from "@/components/TransactionFormDialog";
+import { CategoryFormDialog } from "@/components/CategoryFormDialog";
 
 import authService from "@/services/auth";
 import useUserStore from "@/stores/userStore";
-import { TransactionDialog } from "@/components/TransactionFormDialog";
-import { CategoryFormDialog } from "@/components/CategoryFormDialog";
 
 function Dashboard() {
 	const navigate = useNavigate();
@@ -42,25 +42,21 @@ function Dashboard() {
 	}
 
 	return (
-		<div className="min-h-screen max-h-screen flex w-full max-w-screen-2xl mx-auto">
-			<main className="flex-1 p-8 bg-background">
-				<div className="h-20">
-					<h1 className="text-4xl font-bold">Dashboard</h1>
+		<div className="min-h-screen  w-full max-w-screen-2xl mx-auto">
+			<main className="flex-1 md:h-screen px-8  bg-background">
+				<div className="py-2">
+					<h1 className="text-2xl font-bold">Dashboard</h1>
 				</div>
 
 				{/* Main Content Grid */}
-				<div className="grid grid-cols-3 gap-4 h-[calc(100%-4rem)] ">
+				<div className="grid grid-cols-3 grid-rows-4 gap-4 lg:h-[calc(100%-4rem)] lg:overflow-hidden">
 					{/* Left Column */}
-					<div className="col-span-2 space-y-4">
 						<FinancialSummary />
 						<TransactionList />
-					</div>
 
 					{/* Right Column */}
-					<div className="col-span-1 space-y-4">
 						<Chart />
 						<CategoryChart />
-					</div>
 				</div>
 
 				<TransactionDialog />
