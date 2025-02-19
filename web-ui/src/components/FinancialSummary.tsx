@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 import { TrendingDown, TrendingUp } from "lucide-react";
@@ -6,9 +8,8 @@ import { Button } from "@/components/ui/button";
 
 import useUserStore from "@/stores/userStore";
 import useAccountStore from "@/stores/accountStore";
+
 import accountService from "@/services/accounts";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import useFormStore from "@/stores/formStore";
 
 function Icon({
@@ -34,6 +35,28 @@ function Icon({
 		<div className={cn(baseStyles, variants[variant], className)}>{icon}</div>
 	);
 }
+
+const FinancialCard = ({
+	icon,
+	title,
+	amount,
+	variant,
+}: {
+	icon: React.ReactNode;
+	title: string;
+	amount: number;
+	variant: "primary" | "destructive";
+}) => (
+	<Card className="col-span-2 px-6 py-0">
+		<CardHeader className="pt-4 pb-2 px-0">
+			<Icon icon={icon} variant={variant} />
+			<CardTitle>{title}</CardTitle>
+		</CardHeader>
+		<CardContent className="py-0 px-0">
+			<div className="text-4xl font-bold">${amount.toLocaleString()}</div>
+		</CardContent>
+	</Card>
+);
 
 export function FinancialSummary() {
 	const { user } = useUserStore();
@@ -65,12 +88,12 @@ export function FinancialSummary() {
 	};
 
 	return (
-		<div className="grid gap-4 md:grid-cols-7">
-			<Card className="col-span-3">
-				<CardHeader>
+		<div className="col-span-2 grid gap-4 md:grid-cols-7">
+			<Card className="col-span-3 px-6 py-4">
+				<CardHeader className="pt-0 pb-2 px-0">
 					<CardTitle>Total Balance</CardTitle>
 				</CardHeader>
-				<CardContent>
+				<CardContent className="py-0 px-0">
 					<div className="text-4xl font-bold">
 						${account.balance.toLocaleString()}
 					</div>
@@ -89,29 +112,19 @@ export function FinancialSummary() {
 				</CardContent>
 			</Card>
 
-			<Card className="col-span-2">
-				<CardHeader>
-					<Icon icon={<TrendingUp />} variant="primary" />
-					<CardTitle>Income</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<div className="text-4xl font-bold">
-						${account.incomeThisMonth.toLocaleString()}
-					</div>
-				</CardContent>
-			</Card>
+			<FinancialCard
+				icon={<TrendingUp />}
+				title="Income"
+				amount={account.incomeThisMonth}
+				variant="primary"
+			/>
 
-			<Card className="col-span-2">
-				<CardHeader>
-					<Icon icon={<TrendingDown />} variant="destructive" />
-					<CardTitle>Expenses</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<div className="text-4xl font-bold">
-						${account.expenseThisMonth.toLocaleString()}
-					</div>
-				</CardContent>
-			</Card>
+			<FinancialCard
+				icon={<TrendingDown />}
+				title="Expenses"
+				amount={account.expenseThisMonth}
+				variant="destructive"
+			/>
 		</div>
 	);
 }
