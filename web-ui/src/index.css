@@ -12,7 +12,7 @@
     --popover-foreground: 0 0% 3.9%;
     --primary: 89, 77%, 68%;
     --primary-foreground: 122, 54%, 18%;
-    --secondary: 142 69% 49%;
+    --secondary: 115 69% 89%;
     --secondary-foreground: 0 0% 9%;
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
@@ -28,7 +28,9 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
+    --radius: 0.5rem;
+    --chart-1: 123 58% 39%;
+    --chart-2: 24 76% 61%;
   }
 
   .dark {
@@ -53,9 +55,6 @@
     --ring: 0 0% 83.1%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
   }
 }
 
@@ -67,4 +66,37 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  input[type="color"] {
+    padding: 0;
+    border-color: transparent;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right-color: #ccc;
+  }
+
+  input[type="color"]::-moz-color-swatch {
+    border: none;
+  }
+
+  input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 0;
+  }
+
+  input[type="color"]::-webkit-color-swatch {
+    border: none;
+  }
+
+
 }

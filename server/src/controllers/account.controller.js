@@ -118,7 +118,9 @@ const removeAccess = async (req, res) => {
 
 const fetchAccountDetailsById = async (req, res) => {
   const accountId = req.params.id;
-  const account = await Account.findById(accountId);
+  const account = await Account.findById(accountId).populate(
+    "transactionCategories",
+  );
   const recentTransactionIds = account.transactions.slice(-5);
   const recentTransactions = await Transaction.find({
     _id: { $in: recentTransactionIds },
@@ -135,6 +137,7 @@ const fetchAccountDetailsById = async (req, res) => {
     id: account.id,
     name: account.name,
     balance: account.balance,
+    transactionCategories: account.transactionCategories,
     expenseThisMonth,
     incomeThisMonth,
     recentTransactions,

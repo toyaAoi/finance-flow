@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,22 +8,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
 import authService from "@/services/auth";
+import useUserStore from "@/stores/userStore";
 
 function AuthForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isLogin, setIsLogin] = useState(true);
+  const { setUser } = useUserStore();
 
   const navigate = useNavigate();
 
   const loginMutation = useMutation({
     mutationFn: authService.login,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      delete data.token;
+      setUser(data);
       navigate("/dashboard");
-    },
-    onError: (error) => {
-      toast.error(error.message);
     },
   });
 
@@ -32,9 +32,6 @@ function AuthForm() {
     mutationFn: authService.register,
     onSuccess: () => {
       loginMutation.mutate({ username, password });
-    },
-    onError: (error) => {
-      toast.error(error.message);
     },
   });
 

@@ -104,6 +104,29 @@ components:
           type: array
           items:
             type: string
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
+
+    Transaction:
+      type: object
+      properties:
+        type:
+          $ref: "#/components/schemas/TransactionType"
+        amount:
+          type: number
+        category:
+          type: string
+        time:
+          type: string
+          format: date-time
+        notes:
+          type: string
+        user:
+          type: string
+        account:
+          type: string
 
     CreateAccount:
       type: object
